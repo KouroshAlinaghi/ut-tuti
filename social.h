@@ -44,3 +44,8 @@ int get_num_of_likes_from_user(User* user, LNode* like_head);
         Post* => ok
 */
 Post* find_post(int post_id, PNode* post_head);
+
+/*
+    Returns number of posts written by user
+*/
+int get_number_of_posts(User* user, PNode* post_head);

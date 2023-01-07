@@ -159,3 +159,16 @@ Post* find_post(int post_id, PNode* post_head) {
 
     return NULL;
 }
+
+/*
+    Returns number of posts written by user
+*/
+int get_number_of_posts(User* user, PNode* post_head) {
+    int count = 0;
+    PNode* curr = post_head;
+    while (curr = curr->next)
+        if (curr->data->author == user) 
+            count++;
+
+    return count;
+}

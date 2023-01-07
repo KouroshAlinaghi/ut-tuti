@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "social.h": "c",
-        "linked_list.h": "c",
-        "stdio.h": "c",
-        "string.h": "c"
-    }
-}

@@ -19,7 +19,6 @@ char *read_line() {
         counter++;
     }
     str[counter] = '\0';
-
     return str;
 }
 
@@ -53,6 +52,8 @@ int get_code_from_command(char* command) {
         return 7;
     else if (strcmp(command, "show") == 0)
         return 8;
+    else if (strcmp(command, "exit") == 0) 
+        return 9;
     else 
         return -1;
 }
@@ -60,15 +61,26 @@ int get_code_from_command(char* command) {
 /*
     splits the given line's arguments to arg_tokens, and
     also changes command_code to entered command's code.
+    Retruns number of arguments
 */
-void split_commands(char* line, char** arg_tokens, int* command_code) {
+int split_commands(char* line, char** arg_tokens, int* command_code) {
+    int any_non_whitespaces = 0;
+    for (int i=0; i<get_size(line); i++)
+        if (line[i] != ' ') {
+            any_non_whitespaces = 1;
+            break;
+        }
+
+    if (!any_non_whitespaces)
+        return -1;
+
     char* str, *token, *to_be_freed;
     to_be_freed = str = strdup(line); 
 
     int arg_tokens_found = 0;
     
     // Fetching command
-    char* command = strsep(&str, " ");
+    char* command = strtok(str, " ");
     *command_code = get_code_from_command(command);
 
     // delimiter for spliting is '\n' if command is post.
@@ -77,7 +89,7 @@ void split_commands(char* line, char** arg_tokens, int* command_code) {
     
     // loop through the string to extract all arguments
     int current_token_size = 0;
-    while ((token = strsep(&str, delimiter)) && arg_tokens_found <= MAX_NUMBER_OF_ARGUMENTS) {
+    while ((token = strtok(NULL, delimiter)) && arg_tokens_found <= MAX_NUMBER_OF_ARGUMENTS) {
         current_token_size = get_size(token);
         arg_tokens[arg_tokens_found] = (char*)malloc((current_token_size+1)*sizeof(char));
         strcpy(arg_tokens[arg_tokens_found], token);
@@ -85,4 +97,6 @@ void split_commands(char* line, char** arg_tokens, int* command_code) {
     }
 
     free(to_be_freed);
+
+    return arg_tokens_found;
 }

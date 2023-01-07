@@ -2,6 +2,7 @@
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "structs.h"
@@ -9,7 +10,7 @@
 #include "account.h"
 #include "parser.h"
 
-#define NUMBER_OF_COMMANDS 9
+#define NUMBER_OF_COMMANDS 10
 #define MAX_NUMBER_OF_ARGUMENTS 2
 
 /*
@@ -18,13 +19,6 @@
     and also modifies msg.
 */
 int execute(int command_code, char** args, char* msg, UNode* u_head, PNode* p_head, LNode* l_head, User** current_user, int* num_of_posts_created) {
-    int number_of_args_per_command[NUMBER_OF_COMMANDS] = {2, 2, 1, 2, 0, 1, 0, 1, 1};
-    for (int i=0; i<number_of_args_per_command[command_code]; i++) {
-        if (args[i] == NULL || args[i][0] == 1) {
-            strcpy(msg, "Wrong number of arguments");
-            return 0;
-        }
-    }
     switch (command_code) {
         case 0:
             switch (sign_up(args[0], args[1], u_head, current_user)) {
@@ -150,9 +144,8 @@ int execute(int command_code, char** args, char* msg, UNode* u_head, PNode* p_he
                 free(args[0]);
                 return 0;
             }
-        default: // -1
-            strcpy(msg, "Plaese enter a valid command.");
-            return 0;
+        case 9:
+            exit(0);
     }
 
 }
@@ -162,6 +155,19 @@ int start_cli(char* msg, UNode* u_head, PNode* p_head, LNode* l_head, User** cur
     char* input = read_line();
     int command_code;
     char* args[MAX_NUMBER_OF_ARGUMENTS];
-    split_commands(input, args, &command_code);
+    int number_of_arguments = split_commands(input, args, &command_code);
+    if (number_of_arguments == -1) {
+        strcpy(msg, "Please enter a valid command, not just empty spcaes!");
+        return 0;
+    }
+    int number_of_args_per_command[NUMBER_OF_COMMANDS] = {2, 2, 1, 2, 0, 1, 0, 1, 1, 0};
+    if (command_code == -1) {
+        strcpy(msg, "Unknown command, please enter a valid one.");
+        return 0;
+    }
+    if (number_of_args_per_command[command_code] != number_of_arguments) {
+        strcpy(msg, "Wrong number of arguments");
+        return 0;
+    }
     return execute(command_code, args, msg, u_head, p_head, l_head, current_user, num_of_posts_created);
 }

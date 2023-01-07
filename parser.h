@@ -13,5 +13,6 @@ int get_code_from_command(char* command);
 /*
     splits the given line's arguments to arg_tokens, and
     also changes command_code to entered command's code.
+    Returns number of arguments
 */
-void split_commands(char* line, char** arg_tokens, int* command_code);
+int split_commands(char* line, char** arg_tokens, int* command_code);
