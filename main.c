@@ -23,18 +23,19 @@ int main() {
     while (1) {
         users_db = initialize_users_file();
         posts_db = initialize_posts_file();
+        regenerate_users(users_db, u_head, p_head);
+        regenerate_posts(posts_db, u_head, p_head, l_head);
         printf("%s\n", msg);
         if (current_user)
             printf("#");
-        if (result) {
-            regenerate_users(users_db, u_head, p_head);
-            regenerate_posts(posts_db, u_head, p_head, l_head);
+
+        if (result)
             printf("\033[1;32m"); // green
-            printf("> ");
-        } else {
+        else
             printf("\033[1;31m"); // red
-            printf("> ");
-        }
+        
+        
+        printf("> ");
         printf("\033[0m");
         fclose(users_db);
         fclose(posts_db);
